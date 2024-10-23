@@ -3,6 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import discordLogin from '@lib/auth/sessionManagement/discordLogin';
 import { useRouter } from 'next/navigation';
+import { triggerToast } from '@/components/core/toastNotifications';
 
 export default function Page() {
     const searchParams = useSearchParams();
@@ -15,8 +16,9 @@ export default function Page() {
             if (code && !hasLoggedIn) {
                 setHasLoggedIn(true);
                 try {
-                    const res = await discordLogin(code);
-                    if (res == 'personal') {
+                    const res = JSON.parse(await discordLogin(code));
+                    triggerToast(res.h, res.d, res.c);
+                    if (res.s == true) {
                         router.push('/personal');
                     } else {
                         router.push('/login');

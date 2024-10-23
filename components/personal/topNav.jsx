@@ -1,12 +1,19 @@
 'use client';
-import Link from 'next/link';
 import styles from '@css/personal/topNav.module.css';
 import Image from 'next/image';
 import logout from '@/lib/auth/sessionManagement/logout';
 import { useNav } from './navContext';
+import { triggerToast } from '../core/toastNotifications';
 
 export default function TopNav() {
     const { openStatus, setOpenStatus } = useNav();
+    const handleLogout = async () => {
+        const res = JSON.parse(await logout());
+        triggerToast(res.h, res.d, res.c);
+        if (res.s) {
+            window.location.href = '/login';
+        }
+    };
 
     return (
         <div className={`${styles.nav}`}>
@@ -29,7 +36,7 @@ export default function TopNav() {
                 </a>
             </div>
             <div className={styles.right}>
-                <button className={styles.button} onClick={logout}>
+                <button className={styles.button} onClick={() => handleLogout()}>
                     Log Out
                 </button>
                 <div className={styles.menu}>
