@@ -15,7 +15,12 @@ export default function Page() {
             if (code && !hasLoggedIn) {
                 setHasLoggedIn(true);
                 try {
-                    await discordLogin(code);
+                    const res = await discordLogin(code);
+                    if (res == 'personal') {
+                        router.push('/personal');
+                    } else {
+                        router.push('/login');
+                    }
                 } catch (error) {
                     console.error('Login failed:', error);
                     router.push('/login');
